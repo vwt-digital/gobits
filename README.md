@@ -6,7 +6,7 @@ Gobits is a very small module, which acts as a metadata carrier for pub/sub mess
 
 Cloud function with http trigger:
 
-```
+```python
 from gobits import Gobits
 
 
@@ -23,7 +23,7 @@ def handler(request):
 
 Cloud funciton with storage trigger:
 
-```
+```python
 from gobits import Gobits
 
 
