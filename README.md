@@ -21,15 +21,15 @@ def handler(request):
 
 ```
 
-Cloud funciton with storage trigger:
+Cloud function with storage trigger:
 
 ```python
 from gobits import Gobits
 
 
-def handler(data):
+def handler(data, context):
 
-    bits = Gobits(data=data)
+    bits = Gobits(context=context)
 
     message = {
       'gobits': bits,

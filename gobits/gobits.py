@@ -1,23 +1,26 @@
 import os
 import time
 
+from werkzeug.local import LocalProxy
+from google.google.cloud.functions_v1.context import Context
+
 
 class Gobits:
     """
-    A small class that holds information (bits) for a pub/sub message payload.
+    A small class that gathers information (bits) for a pub/sub message payload.
 
     Attributes:
-        _data               A dictionary holding GCP trigger information.
-        _request            An instance of werkzeug.local.LocalProxy.
+        _request            Holds information about the cloud function request.
+        _context            Holds information about the cloud function context.
         created             Date of creation in milliseconds since epoch (UTC).
         project             The source GCP project.
         function_name       Name of the processing cloud function.
         function_version    Version of the processing cloud function.
     """
 
-    def __init__(self, data=None, request=None):
-        self._data = data
+    def __init__(self, request: LocalProxy = None, context: Context = None):
         self._request = request
+        self._context = context
         self.created = str(int(round(time.time() * 1000)))
         self.project = os.getenv('X_GOOGLE_GCP_PROJECT')
         self.function_name = os.getenv('X_GOOGLE_FUNCTION_NAME')
@@ -32,17 +35,19 @@ class Gobits:
         self._request = value
 
     @property
-    def data(self):
-        return self._data
+    def context(self):
+        return self._context
 
-    @data.setter
-    def data(self, value):
-        self._data = value
+    @context.setter
+    def context(self, value):
+        self._context = value
 
     @property
     def id(self):
         if self._request:
             return self._request.get('environ', {}).get('HTTP_FUNCTION_EXECUTION_ID')
+        elif self._context:
+            return self._context.get('event_id')
 
     def to_json(self):
         all = dict(vars(self), id=self.id)
