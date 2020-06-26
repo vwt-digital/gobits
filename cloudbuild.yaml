@@ -1,6 +1,7 @@
 ---
 timeout: 1800s
 options:
+  substitution_option: 'ALLOW_LOOSE'
   env:
     - 'VENV=/workspace/venv'
 steps:
@@ -33,18 +34,25 @@ steps:
         source "$$VENV"/bin/activate
         twine check dist/*
 
-  # Publish package
+  # Publish package when tagged
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - -c
       - |
-        USERNAME=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-username)
-        PASSWORD=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-password)
-        if [ "$BRANCH_NAME" == "develop" ]; then
-            REPO=testpypi
-        else
-            REPO=pypi
+        if [[ -n "$TAG_NAME" ]]
+        then
+
+            USERNAME=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-username)
+            PASSWORD=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-password)
+
+            if [[ "$TAG_NAME" =~ *-dev ]]
+                REPO=testpypi
+            else
+                REPO=pypi
+            fi
+
+            source "$$VENV"/bin/activate
+            twine upload -r "$$REPO" dist/* -u "$$USERNAME" -p "$$PASSWORD"
+
         fi
-        source "$$VENV"/bin/activate
-        twine upload -r "$$REPO" dist/* -u "$$USERNAME" -p "$$PASSWORD"
