@@ -5,8 +5,6 @@ from setuptools import setup
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
-print(os.environ)
-
 setup(
     name='gobits',
     version=os.environ['TAG_NAME'],
