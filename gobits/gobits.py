@@ -2,7 +2,6 @@ import os
 import time
 
 from werkzeug.local import LocalProxy
-from google.google.cloud.functions_v1.context import Context
 
 
 class Gobits:
@@ -18,7 +17,7 @@ class Gobits:
         function_version    Version of the processing cloud function.
     """
 
-    def __init__(self, request: LocalProxy = None, context: Context = None):
+    def __init__(self, request: LocalProxy = None, context=None):
         self._request = request
         self._context = context
         self.created = str(int(round(time.time() * 1000)))
@@ -53,7 +52,3 @@ class Gobits:
         all = dict(vars(self), id=self.id)
         public = {k: v for (k, v) in all.items() if not k.startswith('_')}
         return public
-
-
-go = Gobits()
-print(go.to_json())
