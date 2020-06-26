@@ -48,6 +48,7 @@ steps:
             PASSWORD=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-password)
 
             if [[ "$TAG_NAME" =~ *-dev ]]
+            then
                 REPO=testpypi
             else
                 REPO=pypi
