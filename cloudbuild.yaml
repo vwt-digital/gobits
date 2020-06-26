@@ -46,13 +46,7 @@ steps:
 
             USERNAME=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-username)
             PASSWORD=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-password)
-
-            if [[ "$TAG_NAME" =~ *.dev ]]
-            then
-                REPO=testpypi
-            else
-                REPO=pypi
-            fi
+            REPO=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-repo)
 
             source "$$VENV"/bin/activate
             twine upload -r "$$REPO" dist/* -u "$$USERNAME" -p "$$PASSWORD"
