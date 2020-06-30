@@ -46,7 +46,7 @@ class Gobits:
         if self._request:
             return self._request.get('environ', {}).get('HTTP_FUNCTION_EXECUTION_ID')
         elif self._context:
-            return self._context.get('event_id')
+            return self._context.event_id
 
     def to_json(self):
         all = dict(vars(self), id=self.id)
