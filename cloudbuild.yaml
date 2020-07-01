@@ -21,6 +21,7 @@ steps:
       - -c
       - |
         source "$$VENV"/bin/activate
+        export TAG_NAME="$TAG_NAME"
         python setup.py test
 
   # Build package
