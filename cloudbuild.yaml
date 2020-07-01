@@ -13,6 +13,8 @@ steps:
       - |
         pip install virtualenv==16.7.9
         virtualenv -p python3 "$$VENV"
+        source "$$VENV"/bin/activate
+        pip install twine
 
   # Run unittests
   - name: gcr.io/cloud-builders/gcloud
@@ -57,7 +59,6 @@ steps:
             REPO=$(gcloud secrets versions access latest --secret="$PROJECT_ID"-repo)
 
             source "$$VENV"/bin/activate
-            pip install twine
             twine upload -r "$$REPO" dist/* -u "$$USERNAME" -p "$$PASSWORD"
 
         fi
