@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='gobits',
-    version=os.environ['TAG_NAME'],
+    version=os.getenv('TAG_NAME', '0.0.0'),
     description='Small Python package to add GCP metadata to pub/sub messages',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
