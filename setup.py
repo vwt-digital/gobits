@@ -5,6 +5,9 @@ from setuptools import setup
 with open('requirements.txt') as f:
     install_requires = f.read().splitlines()
 
+with open('test-requirements.txt') as f:
+    test_requires = f.read().splitlines()
+
 setup(
     name='gobits',
     version=os.getenv('TAG_NAME', '0.0.0'),
@@ -18,7 +21,7 @@ setup(
     packages=['gobits'],
     install_requires=install_requires,
     test_suite="tests",
-    tests_require=["Werkzeug==1.0.1"],
+    tests_require=test_requires,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
