@@ -37,7 +37,7 @@ from gobits import Gobits
 def handler(request):
 
     envelope = json.loads(request.data.decode('utf-8'))
-    message = envelope['message']['publishTime']
+    message = envelope['message']
 
     bits = Gobits(request=request, message=message)
 

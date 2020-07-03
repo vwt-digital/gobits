@@ -65,6 +65,17 @@ class TestGobits(unittest.TestCase):
         self.assertEqual(self.gobits.message_publish_time, MESSAGE_PUBLISH_TIME)
 
     def test_to_json(self):
+        bits = self.gobits.to_json()
+        self.assertEqual(bits['gcp_project'], X_GOOGLE_GCP_PROJECT)
+        self.assertEqual(bits['execution_id'], HTTP_FUNCTION_EXECUTION_ID)
+        self.assertEqual(bits['execution_type'], EXECUTION_TYPE)
+        self.assertEqual(bits['execution_trigger_type'], FUNCTION_TRIGGER_TYPE)
+        self.assertEqual(bits['function_name'], X_GOOGLE_FUNCTION_NAME)
+        self.assertEqual(bits['function_version'], X_GOOGLE_FUNCTION_VERSION)
+        self.assertEqual(bits['message_id'], MESSAGE_ID)
+        self.assertEqual(bits['message_publish_time'], MESSAGE_PUBLISH_TIME)
+
+    def test_to_json_type(self):
         self.assertIsInstance(self.gobits.to_json(), dict)
 
 

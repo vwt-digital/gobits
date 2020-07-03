@@ -24,20 +24,20 @@ class Gobits:
         _message_publish_time    The time at which the message was published to pub/sub (UTC).
     """
 
-    def __init__(self, request: LocalProxy = None, message: dict = None, context=None):
+    def __init__(self, request: LocalProxy = None, message: dict = {}, context=None):
         self.__request = request
         self.__context = context
         self.__message = message
-        self._processed = None
-        self._gcp_project = None
-        self._execution_id = None
-        self._execution_type = None
-        self._execution_trigger_type = None
-        self._function_name = None
-        self._function_version = None
-        self._event_id = None
-        self._message_id = None
-        self._message_publish_time = None
+        self._processed = str(int(round(time.time() * 1000)))
+        self._gcp_project = os.getenv('X_GOOGLE_GCP_PROJECT')
+        self._execution_id = self.__request.headers.get('Function-Execution-Id') if request else None
+        self._execution_type = 'cloud_function' if os.getenv('X_GOOGLE_FUNCTION_NAME') else None
+        self._execution_trigger_type = os.getenv('FUNCTION_TRIGGER_TYPE')
+        self._function_name = os.getenv('X_GOOGLE_FUNCTION_NAME')
+        self._function_version = os.getenv('X_GOOGLE_FUNCTION_VERSION')
+        self._event_id = self.__context.event_id if context else None
+        self._message_id = self.__message.get('messageId')
+        self._message_publish_time = self.__message.get('publishTime')
 
     @property
     def request(self):
@@ -65,7 +65,7 @@ class Gobits:
 
     @property
     def processed(self):
-        return str(int(round(time.time() * 1000)))
+        return self._processed
 
     @processed.setter
     def processed(self, value):
@@ -73,7 +73,7 @@ class Gobits:
 
     @property
     def gcp_project(self):
-        return os.getenv('X_GOOGLE_GCP_PROJECT')
+        return self._gcp_project
 
     @gcp_project.setter
     def gcp_project(self, value):
@@ -81,8 +81,7 @@ class Gobits:
 
     @property
     def execution_id(self):
-        if self.__request:
-            return self.__request.headers.get('Function-Execution-Id')
+        return self._execution_id
 
     @execution_id.setter
     def execution_id(self, value):
@@ -90,8 +89,7 @@ class Gobits:
 
     @property
     def execution_type(self):
-        if os.getenv('X_GOOGLE_FUNCTION_NAME'):
-            return 'cloud_function'
+        return self._execution_type
 
     @execution_type.setter
     def execution_type(self, value):
@@ -99,7 +97,7 @@ class Gobits:
 
     @property
     def execution_trigger_type(self):
-        return os.getenv('FUNCTION_TRIGGER_TYPE')
+        return self._execution_trigger_type
 
     @execution_trigger_type.setter
     def execution_trigger_type(self, value):
@@ -107,7 +105,7 @@ class Gobits:
 
     @property
     def function_name(self):
-        return os.getenv('X_GOOGLE_FUNCTION_NAME')
+        return self._function_name
 
     @function_name.setter
     def function_name(self, value):
@@ -115,7 +113,7 @@ class Gobits:
 
     @property
     def function_version(self):
-        return os.getenv('X_GOOGLE_FUNCTION_VERSION')
+        return self._function_version
 
     @function_version.setter
     def function_version(self, value):
@@ -123,8 +121,7 @@ class Gobits:
 
     @property
     def event_id(self):
-        if self.__context:
-            return self.__context.event_id
+        return self._event_id
 
     @event_id.setter
     def event_id(self, value):
@@ -132,8 +129,7 @@ class Gobits:
 
     @property
     def message_id(self):
-        if self.__message:
-            return self.__message.get('messageId')
+        return self._message_id
 
     @message_id.setter
     def message_id(self, value):
@@ -141,16 +137,22 @@ class Gobits:
 
     @property
     def message_publish_time(self):
-        if self.__message:
-            return self.__message.get('publishTime')
+        return self._message_publish_time
 
     @message_publish_time.setter
     def message_publish_time(self, value):
         self._message_publish_time = value
 
     def to_json(self):
-
-        protected = {k: v for (k, v) in self.__dict__.items() if '__' not in k}
-        vars = {k.strip('_'): v for (k, v) in protected.items()}
-
-        return vars
+        return {
+            'processed': self.processed,
+            'gcp_project': self.gcp_project,
+            'execution_id': self.execution_id,
+            'execution_type': self.execution_type,
+            'execution_trigger_type': self.execution_trigger_type,
+            'function_name': self.function_name,
+            'function_version': self.function_version,
+            'event_id': self.event_id,
+            'message_id': self.message_id,
+            'message_publish_time': self.message_publish_time
+        }
