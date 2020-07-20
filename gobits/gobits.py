@@ -75,6 +75,10 @@ class Gobits:
     def execution_type(self):
         if os.getenv('X_GOOGLE_FUNCTION_NAME'):
             return 'cloud_function'
+        elif os.getenv('BUILDER_OUTPUT'):
+            return 'cloud_build'
+        else:
+            return None
 
     @property
     def execution_trigger_type(self):
