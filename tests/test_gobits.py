@@ -16,6 +16,7 @@ EXECUTION_TYPE = 'cloud_function'
 EVENT_ID = '1234567890123456'
 MESSAGE_ID = '1234567890123456'
 MESSAGE_PUBLISH_TIME = '2020-12-31T23:59:59.999Z'
+BUILDER_OUTPUT = '/builder/outputs'
 
 
 class TestGobits(unittest.TestCase):
@@ -122,6 +123,27 @@ class TestContextGobits(unittest.TestCase):
     def test_json_length(self):
         gobits = self.gobits.to_json()
         self.assertEqual(len(gobits), 2)
+
+
+class TestCloudBuildGobits(unittest.TestCase):
+
+    def setUp(self):
+        os.environ['BUILDER_OUTPUT'] = BUILDER_OUTPUT
+        self.gobits = Gobits()
+
+    def test_processed(self):
+        self.assertEqual(len(self.gobits.processed), 24),
+
+    def test_to_json(self):
+        gobits = self.gobits.to_json()
+        self.assertEqual(gobits['execution_type'], 'cloud_build')
+
+    def test_json_length(self):
+        gobits = self.gobits.to_json()
+        self.assertEqual(len(gobits), 2)
+
+    def tearDown(self):
+        os.environ['BUILDER_OUTPUT'] = ''
 
 
 if __name__ == '__main__':
