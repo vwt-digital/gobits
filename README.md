@@ -39,10 +39,10 @@ from gobits import Gobits
 
 def handler(request):
 
-    gobits = Gobits.from_request(request=request)
+    metadata = Gobits.from_request(request=request)
 
     message = {
-      'gobits': [gobits.to_json()],
+      'gobits': [metadata.to_json()],
       'data': []
     }
 
@@ -56,10 +56,10 @@ from gobits import Gobits
 
 def handler(data, context):
 
-    bits = Gobits.from_context(context=context)
+    metadata = Gobits.from_context(context=context)
 
     message = {
-      'gobits': [gobits.to_json()],
+      'gobits': [metadata.to_json()],
       'data': []
     }
 
