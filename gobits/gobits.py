@@ -77,6 +77,8 @@ class Gobits:
             return 'cloud_function'
         elif os.getenv('BUILDER_OUTPUT'):
             return 'cloud_build'
+        elif os.getenv('GAE_APPLICATION'):
+            return 'google_app_engine'
         else:
             return None
 
