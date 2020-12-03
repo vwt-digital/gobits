@@ -65,6 +65,19 @@ class TestGobits(unittest.TestCase):
         os.environ['X_GOOGLE_FUNCTION_VERSION'] = ''
 
 
+class TestEmptyRequestGobits(unittest.TestCase):
+
+    @patch('werkzeug.local.LocalProxy')
+    def setUp(self, mock_request):
+        mock_request.data = b''
+        mock_request.headers = {'Function-Execution-Id': HTTP_FUNCTION_EXECUTION_ID}
+        self.gobits = Gobits.from_request(request=mock_request)
+
+    def test_to_json(self):
+        gobits = self.gobits.to_json()
+        self.assertEqual(gobits['execution_id'], HTTP_FUNCTION_EXECUTION_ID)
+
+
 class TestRequestGobits(unittest.TestCase):
 
     @patch('werkzeug.local.LocalProxy')

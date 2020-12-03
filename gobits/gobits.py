@@ -3,6 +3,7 @@ import json
 
 from datetime import datetime
 from werkzeug.local import LocalProxy
+from json.decoder import JSONDecodeError
 
 
 class Gobits:
@@ -50,7 +51,10 @@ class Gobits:
     @property
     def envelope(self):
         if self._request:
-            return json.loads(self._request.data.decode('utf-8'))
+            try:
+                return json.loads(self._request.data.decode('utf-8'))
+            except JSONDecodeError:
+                return {}
         else:
             return {}
 
