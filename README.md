@@ -1,3 +1,4 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/vwt-digital/gobits/badge)](https://www.codefactor.io/repository/github/vwt-digital/gobits)
 # Description
 
 Gobits is a very small module, which acts as a metadata carrier within an event-driven architecture on the Google Cloud Platform (GCP).
