@@ -3,6 +3,7 @@ import json
 
 from datetime import datetime
 from werkzeug.local import LocalProxy
+from json.decoder import JSONDecodeError
 
 
 class Gobits:
@@ -50,7 +51,10 @@ class Gobits:
     @property
     def envelope(self):
         if self._request:
-            return json.loads(self._request.data.decode('utf-8'))
+            try:
+                return json.loads(self._request.data.decode('utf-8'))
+            except JSONDecodeError:
+                return {}
         else:
             return {}
 
@@ -75,12 +79,14 @@ class Gobits:
     def execution_type(self):
         if os.getenv('X_GOOGLE_FUNCTION_NAME'):
             return 'cloud_function'
-        elif os.getenv('BUILDER_OUTPUT'):
+
+        if os.getenv('BUILDER_OUTPUT'):
             return 'cloud_build'
-        elif os.getenv('GAE_APPLICATION'):
+
+        if os.getenv('GAE_APPLICATION'):
             return 'google_app_engine'
-        else:
-            return None
+
+        return None
 
     @property
     def execution_trigger_type(self):
