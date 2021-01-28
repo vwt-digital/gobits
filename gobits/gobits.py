@@ -74,6 +74,7 @@ class Gobits:
     def execution_id(self):
         if self._request:
             return self._request.headers.get('Function-Execution-Id')
+        return None
 
     @property
     def execution_type(self):
@@ -103,7 +104,8 @@ class Gobits:
     @property
     def event_id(self):
         if self._context:
-            return self._context.event_id
+            return self._context.get('event_id')
+        return None
 
     @property
     def message_id(self):
