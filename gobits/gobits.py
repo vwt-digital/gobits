@@ -104,7 +104,10 @@ class Gobits:
     @property
     def event_id(self):
         if self._context:
-            return self._context.get('event_id')
+            if isinstance(self._context, dict):
+                return self._context.get('event_id')
+            else:
+                return self._context.event_id
         return None
 
     @property
