@@ -118,8 +118,9 @@ class TestRequestGobits(unittest.TestCase):
 
 class TestContextGobits(unittest.TestCase):
 
-    def setUp(self):
-        mock_context = {'event_id': EVENT_ID}
+    @patch('unittest.mock.Mock')
+    def setUp(self, mock_context):
+        mock_context.event_id = EVENT_ID
         self.gobits = Gobits.from_context(context=mock_context)
 
     def test_processed(self):

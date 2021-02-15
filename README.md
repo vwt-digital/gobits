@@ -65,3 +65,18 @@ def handler(data, context):
     }
 
 ```
+
+# Testing
+
+Sometimes you want to test a cloud function locally. Be sure to pass mock objects containing the correct fields (if applicable).
+
+```python
+from main import handler
+from unittest.mock import Mock
+
+mock_data = Mock()
+mock_context = Mock()
+mock_context.event_id = "12345678"
+
+handler(mock_data, mock_context)
+```
