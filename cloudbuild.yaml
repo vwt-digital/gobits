@@ -11,6 +11,8 @@ steps:
     args:
       - -c
       - |
+        apt-get -y update
+        apt-get -y install python3-pip
         pip install virtualenv==16.7.9
         virtualenv -p python3 "$$VENV"
         source "$$VENV"/bin/activate
